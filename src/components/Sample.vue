@@ -7,9 +7,9 @@
 </template>
 
 <script>
-import Ticker from '../assets/js/common/display/Ticker.js'
-import Event from '../assets/js/common/events/Event.js'
-import EventDispatcher from '../assets/js/common/events/EventDispatcher.js'
+import Ticker from '../assets/js/libs/tk90755/display/Ticker.js'
+import Event from '../assets/js/libs/tk90755/events/Event.js'
+import EventDispatcher from '../assets/js/libs/tk90755/events/EventDispatcher.js'
 export default {
   name: 'Sample',
   created(){
