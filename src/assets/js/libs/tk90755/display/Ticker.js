@@ -32,28 +32,28 @@ class Ticker {
     this.items = {};
   }
 
-  add(item , id){
+  add(item , id, debug){
 		if (this.items[id] == undefined)
 		{
 			this.items[id] = item;
 		}
 		else
 		{
-			console.log("【Ticker Error】" + id + "というインスタンス名は" + this.items[id] + "において使用されています。");
+			if(debug === true) console.log("【Ticker Error】" + id + "というインスタンス名は" + this.items[id] + "において使用されています。");
     }
     if(Object.keys(this.items).length !== 0){
       this.renderId = window.requestAnimationFrame(() => {this._render()});
     }
   }
 
-  kill( id ){
+  kill(id , debug){
     if ( this.items[id] )
     {
       delete this.items[id];
     }
     else
     {
-      throw "【Ticker Error】" + id + "というインスタンスはリストに登録されていません。";
+      if(debug === true) console.log("【Ticker Error】" + id + "というインスタンスはリストに登録されていません。");
     }
     if(Object.keys(this.items).length === 0){
       window.cancelAnimationFrame(this.renderId);

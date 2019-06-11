@@ -59,7 +59,6 @@ export default class SvgLoader extends Loader {
           if(xhr.status === 200){
             result = document.getElementById('xhr-result1');
             this._content = xhr.responseText;
-            this.createSvg()
           }else if(xhr.status === 0){
             result = document.getElementById('xhr-result1');
             this._content = xhr.responseText;
@@ -78,64 +77,6 @@ export default class SvgLoader extends Loader {
   // cancel(){
 
   // }
-
-  //__________________________________________________________________________________
-  // svg
-  createSvg(){
-    let targets = String(this._content).split('\n');
-    let pathTexts = '';
-    let i;
-    for(i in targets){
-      if(pathTexts === '' && String(targets[i].search('<path'))!=-1){
-        pathTexts = targets[i];
-      }
-    }
-
-    if(pathTexts == '') return;
-
-    pathTexts = pathTexts.split('<path ').join('');
-    pathTexts = pathTexts.split('/>').join('');
-    pathTexts = String(pathTexts).split(' ');
-
-    let o = {};
-    for(i in pathTexts){
-      let data = String(pathTexts[i]).split('=');
-      o[data[0]] = data[1].split('"').join('');
-    }
-
-    let xmlns = "http://www.w3.org/2000/svg";
-    let svgElem = document.createElementNS (xmlns, "svg");
-    svgElem.setAttributeNS (null, "version", 1.1);
-    svgElem.setAttributeNS (null, "id", "レイヤー_1");
-    svgElem.setAttributeNS (null, "x", "0px");
-    svgElem.setAttributeNS (null, "y", "0px");
-    svgElem.setAttributeNS (null, "viewBox", "0 0 0 0");
-
-    let newpath = document.createElementNS(xmlns,"path");  
-    newpath.setAttribute("id", "pathIdD");
-    if(o['fill'] !== undefined) newpath.setAttribute("fill", o['fill']);
-    if(o['stroke'] !== undefined) newpath.setAttribute("stroke", o['stroke']);  
-    if(o['stroke-miterlimit'] !== undefined) newpath.setAttribute("stroke-miterlimit", o['stroke-miterlimit']); 
-    if(o['d'] !== undefined) newpath.setAttribute("d", o['d']);
-
-    svgElem.appendChild(newpath);
-
-    let path = newpath;
-    let pathLength = path.getTotalLength();
-    let nowPos = 0;
-    
-    function anime() {
-      if(nowPos > pathLength) {
-        nowPos = 0;
-      }
-      var point = path.getPointAtLength(nowPos);
-      console.log(point.x,point.y);
-      nowPos++;
-      setTimeout(function() { anime(); }, 1000/120);
-    }
-    anime()
-  }
-
   //__________________________________________________________________________________
   // Event Handler
   // loaderInitHandler() {

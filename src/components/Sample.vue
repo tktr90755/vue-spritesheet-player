@@ -4,11 +4,7 @@
 </template>
 
 <script>
-import Ticker from '@/assets/js/libs/tk90755/display/Ticker.js'
-import Event from '@/assets/js/libs/tk90755/events/Event.js'
-import EventDispatcher from '@/assets/js/libs/tk90755/events/EventDispatcher.js'
-import Loader from '@/assets/js/libs/tk90755/net/Loader.js'
-import SvgLoader from '@/assets/js/libs/tk90755/net/SvgLoader.js'
+import SvgPlayer from '@/assets/js/libs/tk90755/media/SvgPlayer.js'
 export default {
   name: 'Sample',
   created(){
@@ -28,15 +24,16 @@ export default {
     //   Ticker.kill('sample2')
     // },4000)
 
-    let callback = ()=>{
-      console.log('_callback kitayo')
-      // console.log(loader.content)
-      // var svg = loader.content.getElementsByTagName('svg');
-      // var path = svg.getElementsByTagName('path');
-      // console.log(path)
-    }
-    let loader = new SvgLoader(callback);
-    loader.load('test.svg')
+    // let callback = ()=>{
+    //   console.log('_callback kitayo')
+    //   console.log(loader.content)
+    // }
+    // let loader = new SvgLoader(callback);
+    // loader.load('test.svg')
+
+    let svgPlayer = new SvgPlayer();
+    svgPlayer.load('test.svg')
+    svgPlayer.play()
   }
 }
 </script>
