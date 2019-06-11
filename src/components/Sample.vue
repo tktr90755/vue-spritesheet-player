@@ -1,8 +1,5 @@
 <template>
-  <div class="hello">
-    <p>
-      sample
-    </p>
+  <div id="hello">
   </div>
 </template>
 
@@ -11,7 +8,7 @@ import Ticker from '@/assets/js/libs/tk90755/display/Ticker.js'
 import Event from '@/assets/js/libs/tk90755/events/Event.js'
 import EventDispatcher from '@/assets/js/libs/tk90755/events/EventDispatcher.js'
 import Loader from '@/assets/js/libs/tk90755/net/Loader.js'
-import HtmlLoader from '@/assets/js/libs/tk90755/net/HtmlLoader.js'
+import SvgLoader from '@/assets/js/libs/tk90755/net/SvgLoader.js'
 export default {
   name: 'Sample',
   created(){
@@ -30,8 +27,16 @@ export default {
     // setTimeout(()=>{
     //   Ticker.kill('sample2')
     // },4000)
-    let loader = new HtmlLoader();
-    loader.load()
+
+    let callback = ()=>{
+      console.log('_callback kitayo')
+      // console.log(loader.content)
+      // var svg = loader.content.getElementsByTagName('svg');
+      // var path = svg.getElementsByTagName('path');
+      // console.log(path)
+    }
+    let loader = new SvgLoader(callback);
+    loader.load('test.svg')
   }
 }
 </script>
