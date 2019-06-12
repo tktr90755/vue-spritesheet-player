@@ -94,9 +94,22 @@ export default class SvgPlayer extends Player {
   //__________________________________________________________________________________
   // svg
   createSvg(){
-    let targets = String(this._loader.content).split('\n');
-    let pathTexts = '';
     let i;
+    let targets = String(this._loader.content).split('\n');
+    let viewBoxTexts = '';
+    let pathTexts = '';
+    
+    for(i in targets){
+      let viewBoxPosition = String(targets[i].search('viewBox='));
+      if(viewBoxTexts === '' && viewBoxPosition != -1){
+        viewBoxTexts = String(targets[i]).substr(viewBoxPosition, String(targets[i]).length);
+      }
+    }
+    if(viewBoxTexts != ''){
+      viewBoxTexts = viewBoxTexts.split('viewBox=').join('');
+      viewBoxTexts = viewBoxTexts.split('"').join('');
+    }
+
     for(i in targets){
       if(pathTexts === '' && String(targets[i].search('<path'))!=-1){
         pathTexts = targets[i];
@@ -104,7 +117,6 @@ export default class SvgPlayer extends Player {
     }
 
     if(pathTexts == '') return;
-
     pathTexts = pathTexts.split('<path ').join('');
     pathTexts = pathTexts.split('/>').join('');
     pathTexts = String(pathTexts).split(' ');
@@ -121,7 +133,7 @@ export default class SvgPlayer extends Player {
     this._svg.setAttributeNS (null, "id", "svg" + this.id);
     this._svg.setAttributeNS (null, "x", "0px");
     this._svg.setAttributeNS (null, "y", "0px");
-    this._svg.setAttributeNS (null, "viewBox", "0 0 0 0");
+    this._svg.setAttributeNS (null, "viewBox", viewBoxTexts);
 
     this._path = document.createElementNS(xmlns,"path");  
     this._path.setAttribute("id", "path" + this.id);
