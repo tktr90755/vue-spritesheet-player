@@ -1,6 +1,4 @@
-// import Base from './Base';
-
- /**
+/**
  * Copyright 2014, "tktr90755" All rights reserved.
  * Proprietary and Confidential
  * Do not redistribute
@@ -24,6 +22,7 @@ export default class Player {
     this._totalFrames = NaN;
     this._currentFrame = 0;
     this._percent = 0;
+    this._speed = 0.1;
     this._dispatcher = new EventDispatcher(this);
   }
 
@@ -34,32 +33,36 @@ export default class Player {
   }
 
   kill(){
-
+    this.stop()
+    this._content = null;
   }
 
   play(){
-    Ticker.add(this._render, 'play_' + this._id)
+    this.renderStartEvent()
+    Ticker.add(this._render, 'play_' + this._id, false)
     this._currentFrame = 0;
     this.setPercent();
   }
 
   resume(){
-    Ticker.add(this._render, 'play_' + this._id)
+    Ticker.add(this._render, 'play_' + this._id, false)
   }
 
   pause(){
-    Ticker.kill('play_' + this._id)
+    Ticker.kill('play_' + this._id, false)
   }
 
   stop(){
-    Ticker.kill('play_' + this._id)
+    Ticker.kill('play_' + this._id, false)
     this._currentFrame = 0;
     this.setPercent();
+    this.renderCompleteEvent()
   }
 
-  seek(seekTime){
+  seek(seekTime, autoPlay){
     this._currentFrame = seekTime;
     this.setPercent();
+    if(autoPlay === true) this.resume()
   }
 
   _render=()=>{
@@ -68,14 +71,13 @@ export default class Player {
        isNaN(this._currentFrame) === true ||
        isNaN(this._percent) === true
       ){
-      
+      this.renderCompleteEvent()
     }else if(this._percent >= 1){
-      Ticker.kill('play_' + this._id)
-      this._percent = 1;
-      this._currentFrame = this._totalFrames;
+      this.stop()
     }else{
       this.setPercent();
-      this.renderEvent();
+      this.renderingEvent();
+      if(this._speed != 0 ) this.currentFrame = this.currentFrame + this._speed;
     }
   }
 
@@ -87,30 +89,21 @@ export default class Player {
 
   //__________________________________________________________________________________
   // Event Handler
-  renderEvent() {
+  renderInitEvent() {
+    this._dispatcher.dispatchEvent(new Event(Event.INIT));
+  };
+
+  renderStartEvent() {
+    this._dispatcher.dispatchEvent(new Event(Event.START));
+  };
+
+  renderingEvent() {
     this._dispatcher.dispatchEvent(new Event(Event.RENDER));
   };
 
-  // loaderInitHandler() {
-  //   this._dispatcher.dispatchEvent(new Event(Event.INIT));
-  // };
-
-  // loaderProgressHandler() {
-  //   this._dispatcher.dispatchEvent(new Event(Event.RENDER));
-  // };
-
-  // loaderCompleteHandler() {
-  //   if(this._callback !== undefined) this._callback();
-  //   this._dispatcher.dispatchEvent(new Event(Event.COMPLETE));
-  // };
-
-  // loadIOErrorHandler() {
-  //   this._dispatcher.dispatchEvent(new Event(Event.IO_ERROR));
-  // };
-
-  // loadSecurityHandler() {
-  //   this._dispatcher.dispatchEvent(new Event(Event.SECURITY_ERROR));
-  // };
+  renderCompleteEvent() {
+    this._dispatcher.dispatchEvent(new Event(Event.COMPLETE));
+  };
 
   //__________________________________________________________________________________
   // getter / setter
@@ -138,7 +131,16 @@ export default class Player {
     return this._percent;
   }
   set percent(value){
+    value = Math.min(value, 1)
+    this._currentFrame = value * this._totalFrames;
     this._percent = value;
+  }
+
+  get speed(){
+    return this._speed;
+  }
+  set speed(value){
+    this._speed = value;
   }
 
   get content(){

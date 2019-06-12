@@ -9,31 +9,66 @@
  * @update 
  * 
  */
-/**
- * @class SvgPlayer
- */
+//__________________________________________________________________________________
+// How to use
+/*
+let svgPlayer = new SvgPlayer();
+svgPlayer.speed = 1;
+svgPlayer.dispatcher.addEventListener(Event.INIT, ()=>{
+  console.log("Event.INIT")
+  svgPlayer.play()
+});
+svgPlayer.dispatcher.addEventListener(Event.START, ()=>{
+  console.log("Event.START")
+});
+svgPlayer.dispatcher.addEventListener(Event.RENDER, ()=>{
+  console.log("Event.RENDER")
+  this.$el.style.left = svgPlayer.point.x + "px";
+  this.$el.style.top = svgPlayer.point.y + "px";
+  this.$el.style.transform = 'rotate(' + svgPlayer.rotation + 'deg)';
+});
+svgPlayer.dispatcher.addEventListener(Event.COMPLETE, ()=>{
+  console.log("Event.COMPLETE")
+});
+svgPlayer.load('test.svg', false)//第二引数をtrueにすると自動的にplay()する
+*/
 import SvgLoader from '@/assets/js/libs/tk90755/net/SvgLoader.js'
 import Event from '@/assets/js/libs/tk90755/events/Event.js'
-import EventDispatcher from '@/assets/js/libs/tk90755/events/EventDispatcher.js'
 import Player from '@/assets/js/libs/tk90755/media/Player.js'
 export default class SvgPlayer extends Player {
 
   constructor() {
     super();
-    this.svgLoader;
-    this.svg;
-    this.path;
+    this._loader;
+    this._svg;
+    this._path;
+    this._point;
     this.dispatcher.addEventListener(Event.RENDER, this.renderHandler);
   }
 
   //__________________________________________________________________________________
   // methods
-  load(path){
+  load(path, autoPlay){
     let callback=()=>{
       this.createSvg();
+      this.renderInitEvent();
+      if(autoPlay !== false) this.play();
     }
-    this.svgLoader = new SvgLoader(callback);
-    this.svgLoader.load(path);
+    this._loader = new SvgLoader(callback);
+    this._loader.load(path);
+  }
+
+  kill(){
+    this.dispatcher.removeEventListener(Event.RENDER, this.renderHandler);
+
+    this.stop()
+    super.kill()
+
+    this._loader = null;
+    this._svg = null;
+    this._path = null;
+    this._point = null;
+    this._rotation = 0;
   }
 
   play(){
@@ -55,11 +90,11 @@ export default class SvgPlayer extends Player {
   seek(seekTime){
     super.seek(seekTime)
   }
-
+  
   //__________________________________________________________________________________
   // svg
   createSvg(){
-    let targets = String(this.svgLoader.content).split('\n');
+    let targets = String(this._loader.content).split('\n');
     let pathTexts = '';
     let i;
     for(i in targets){
@@ -81,83 +116,60 @@ export default class SvgPlayer extends Player {
     }
 
     let xmlns = "http://www.w3.org/2000/svg";
-    this.svg = document.createElementNS (xmlns, "svg");
-    this.svg.setAttributeNS (null, "version", 1.1);
-    this.svg.setAttributeNS (null, "id", "svg" + this.id);
-    this.svg.setAttributeNS (null, "x", "0px");
-    this.svg.setAttributeNS (null, "y", "0px");
-    this.svg.setAttributeNS (null, "viewBox", "0 0 0 0");
+    this._svg = document.createElementNS (xmlns, "svg");
+    this._svg.setAttributeNS (null, "version", 1.1);
+    this._svg.setAttributeNS (null, "id", "svg" + this.id);
+    this._svg.setAttributeNS (null, "x", "0px");
+    this._svg.setAttributeNS (null, "y", "0px");
+    this._svg.setAttributeNS (null, "viewBox", "0 0 0 0");
 
-    this.path = document.createElementNS(xmlns,"path");  
-    this.path.setAttribute("id", "path" + this.id);
-    if(o['fill'] !== undefined) this.path.setAttribute("fill", o['fill']);
-    if(o['stroke'] !== undefined) this.path.setAttribute("stroke", o['stroke']);  
-    if(o['stroke-miterlimit'] !== undefined) this.path.setAttribute("stroke-miterlimit", o['stroke-miterlimit']); 
-    if(o['d'] !== undefined) this.path.setAttribute("d", o['d']);
+    this._path = document.createElementNS(xmlns,"path");  
+    this._path.setAttribute("id", "path" + this.id);
+    if(o['fill'] !== undefined) this._path.setAttribute("fill", o['fill']);
+    if(o['stroke'] !== undefined) this._path.setAttribute("stroke", o['stroke']);  
+    if(o['stroke-miterlimit'] !== undefined) this._path.setAttribute("stroke-miterlimit", o['stroke-miterlimit']); 
+    if(o['d'] !== undefined) this._path.setAttribute("d", o['d']);
 
-    this.svg.appendChild(this.path);
+    this._svg.appendChild(this._path);
 
-    this.totalFrames = this.path.getTotalLength();
+    this.totalFrames = this._path.getTotalLength();
     this.currentFrame = 0;
   }
   //__________________________________________________________________________________
   // Event Handler
   renderHandler=()=>{
-    if(this.currentFrame > this.totalFrames) {
-      this.currentFrame = 0;
-    }
-    var point = this.path.getPointAtLength(this.currentFrame);
-    console.log(point.x,point.y);
-    this.currentFrame++;
+    this._point = this._path.getPointAtLength(this.currentFrame);
+    let point2 = this._path.getPointAtLength((this.currentFrame == 0)?0:this.currentFrame-1);
+    this._rotation = this._radian(this._point.x, this._point.y, point2.x, point2.y);
   }
-  // loaderInitHandler() {
-  //   this._dispatcher.dispatchEvent(new Event(Event.INIT));
-  // };
 
-  // loaderProgressHandler() {
-  //   this._dispatcher.dispatchEvent(new Event(Event.RENDER));
-  // };
-
-  // loaderCompleteHandler() {
-  //   if(this._callback !== null || this._callback !== undefined) _callback();
-  //   this._dispatcher.dispatchEvent(new Event(Event.COMPLETE));
-  // };
-
-  // loadIOErrorHandler() {
-  //   this._dispatcher.dispatchEvent(new Event(Event.IO_ERROR));
-  // };
-
-  // loadSecurityHandler() {
-  //   this._dispatcher.dispatchEvent(new Event(Event.SECURITY_ERROR));
-  // };
+  _radian($ax, $ay, $bx, $by){
+    let dx = $ax - $bx;
+    let dy = $ay - $by;
+    let radian = Math.atan2(dy, dx);
+    return radian * 180 / Math.PI;
+  };
 
   //__________________________________________________________________________________
   // getter
-  // get request(){
-  //   return this._request;
-  // }
+  get loader(){
+    return this._loader;
+  }
 
-  // get total(){
-  //   return this._total;
-  // }
+  get svg(){
+    return this._svg;
+  }
 
-  // get loaded(){
-  //   return this._loaded;
-  // }
+  get path(){
+    return this._path;
+  }
 
-  // get percent(){
-  //   return this._percent;
-  // }
+  get point(){
+    return this._point;
+  }
 
-  // get content(){
-  //   return this._content;
-  // }
+  get rotation(){
+    return this._rotation;
+  }
 
-  // get dispatcher(){
-  //   return _dispatcher;
-  // }
-
-  // get callback(){
-  //   return _callback;
-  // }
 }

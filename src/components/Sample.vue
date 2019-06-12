@@ -1,42 +1,42 @@
 <template>
   <div id="hello">
+    ▲
   </div>
 </template>
 
 <script>
 import SvgPlayer from '@/assets/js/libs/tk90755/media/SvgPlayer.js'
+import Event from '@/assets/js/libs/tk90755/events/Event.js'
 export default {
   name: 'Sample',
   created(){
 
   },
   mounted(){
-    // Ticker.add(()=>{
-    //   console.log('sample1' + Math.random())
-    // },'sample1')
-    // Ticker.add(()=>{
-    //   console.log('sample2' + Math.random())
-    // },'sample2')
-    // setTimeout(()=>{
-    //   Ticker.kill('sample1')
-    // },2000)
-    // setTimeout(()=>{
-    //   Ticker.kill('sample2')
-    // },4000)
-
-    // let callback = ()=>{
-    //   console.log('_callback kitayo')
-    //   console.log(loader.content)
-    // }
-    // let loader = new SvgLoader(callback);
-    // loader.load('test.svg')
-
     let svgPlayer = new SvgPlayer();
-    svgPlayer.load('test.svg')
-    svgPlayer.play()
+    svgPlayer.speed = 1;
+    svgPlayer.dispatcher.addEventListener(Event.INIT, ()=>{
+      console.log("Event.INIT")
+      svgPlayer.play()
+    });
+    svgPlayer.dispatcher.addEventListener(Event.START, ()=>{
+      console.log("Event.START")
+    });
+    svgPlayer.dispatcher.addEventListener(Event.RENDER, ()=>{
+      console.log("Event.RENDER")
+      this.$el.style.left = svgPlayer.point.x + "px";
+      this.$el.style.top = svgPlayer.point.y + "px";
+      this.$el.style.transform = 'rotate(' + svgPlayer.rotation + 'deg)';
+    });
+    svgPlayer.dispatcher.addEventListener(Event.COMPLETE, ()=>{
+      console.log("Event.COMPLETE")
+    });
+    svgPlayer.load('test.svg', false)//第二引数をtrueにすると自動的にplay()する
   }
 }
 </script>
 <style scoped>
-
+#hello{
+  position: fixed;
+}
 </style>

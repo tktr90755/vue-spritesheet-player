@@ -9,9 +9,17 @@
  * @update 
  * 
  */
-/**
- * @class HtmlLoader
- */
+//__________________________________________________________________________________
+// How to use
+/*
+let callback = ()=>{
+  console.log('_callback kitayo')
+  console.log(loader.content)
+}
+let loader = new SvgLoader(callback);
+loader.load('test.svg')
+*/
+
 if (!window.XMLHttpRequest){
   XMLHttpRequest = function(){
       try{
@@ -28,8 +36,6 @@ if (!window.XMLHttpRequest){
 }
 
 import Loader from '@/assets/js/libs/tk90755/net/Loader.js'
-import Event from '@/assets/js/libs/tk90755/events/Event.js'
-import EventDispatcher from '@/assets/js/libs/tk90755/events/EventDispatcher.js'
 export default class SvgLoader extends Loader {
 
   constructor(callback) {
