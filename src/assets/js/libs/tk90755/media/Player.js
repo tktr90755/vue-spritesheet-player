@@ -38,10 +38,10 @@ export default class Player {
   }
 
   play(){
-    this.renderStartEvent()
-    Ticker.add(this._render, 'play_' + this._id, false)
     this._currentFrame = 0;
     this.setPercent();
+    this.renderStartEvent()
+    Ticker.add(this._render, 'play_' + this._id, false)
   }
 
   resume(){
@@ -71,7 +71,7 @@ export default class Player {
        isNaN(this._currentFrame) === true ||
        isNaN(this._percent) === true
       ){
-      this.renderCompleteEvent()
+      this.stop()
     }else if(this._percent >= 1){
       this.stop()
     }else{

@@ -1,11 +1,12 @@
 <template>
-  <div id="hello">
-    →
+  <div id="hello0">
+    <div id="hello1">
+    </div>
   </div>
 </template>
 
 <script>
-import SvgPlayer from '@/assets/js/libs/tk90755/media/SvgPlayer.js'
+import SpriteSheetPlayer from '@/assets/js/libs/tk90755/media/SpriteSheetPlayer.js'
 import Event from '@/assets/js/libs/tk90755/events/Event.js'
 export default {
   name: 'Sample',
@@ -13,39 +14,50 @@ export default {
 
   },
   mounted(){
-    let svgPlayer = new SvgPlayer();
-    svgPlayer.speed = 1;
-    svgPlayer.dispatcher.addEventListener(Event.INIT, ()=>{
+    let myImage0 = document.getElementById('hello0');
+    let myImage1 = document.getElementById('hello1');
+    
+    let spriteSheetPlayer = new SpriteSheetPlayer();
+    spriteSheetPlayer.dispatcher.addEventListener(Event.INIT, ()=>{
       console.log("Event.INIT")
-      svgPlayer.play()
-      //使っているsvgはこれ
-      document.getElementById('app').append(svgPlayer.svg)
+
+      myImage1.style.backgroundImage = 'url("/Animal.png")';
+      myImage1.style.backgroundRepeat = 'no-repeat';
+
+      var image = new Image();
+      image.src = spriteSheetPlayer.image;//使っているスプライトシートはこれ
+      image.id = 'my-image';
+      this.$el.append(image);
+
+      spriteSheetPlayer.play()
     });
-    svgPlayer.dispatcher.addEventListener(Event.START, ()=>{
+    spriteSheetPlayer.dispatcher.addEventListener(Event.START, ()=>{
       console.log("Event.START")
     });
-    svgPlayer.dispatcher.addEventListener(Event.RENDER, ()=>{
-      let x = svgPlayer.point.x;
-      let y = svgPlayer.point.y;
-      this.$el.style.left = x + "px";
-      this.$el.style.top = y + "px";
-      this.$el.style.transform = 'rotate(' + svgPlayer.rotation + 'deg)';
-      console.log("Event.RENDER: percent:" + svgPlayer.percent + " x:" + x + " y:" + y + " rotation:" + svgPlayer.rotation )
+    spriteSheetPlayer.dispatcher.addEventListener(Event.RENDER, ()=>{
+      let x = spriteSheetPlayer.x;
+      let y = spriteSheetPlayer.y;
+      let w = spriteSheetPlayer.width;
+      let h = spriteSheetPlayer.height;
+      let paddingTop = spriteSheetPlayer.spriteSourceSizeY;
+      let marginLeft = spriteSheetPlayer.spriteSourceSizeX;
+
+      myImage1.style.width = w + "px";
+      myImage1.style.height = h + "px";
+      myImage1.style.backgroundPosition = -x + 'px ' + -y + 'px';
+      myImage0.style.paddingTop = paddingTop + 'px'; 
+      myImage1.style.marginLeft = marginLeft + 'px';
+
+      console.log("Event.RENDER: x:" + x + " y:" + y + " w:" + w + " h:" + h )
     });
-    svgPlayer.dispatcher.addEventListener(Event.COMPLETE, ()=>{
+    spriteSheetPlayer.dispatcher.addEventListener(Event.COMPLETE, ()=>{
       console.log("Event.COMPLETE")
+      spriteSheetPlayer.play()
     });
-    svgPlayer.load('test.svg', false)//第二引数をtrueにすると自動的にplay()する
+    spriteSheetPlayer.load('Animal.json', 'Animal.png', false)//第二引数をtrueにすると自動的にplay()する
 
   }
 }
 </script>
 <style scoped>
-#hello{
-  position: fixed;
-  font-size: 30px;
-}
-svg{
-  position: fixed;
-}
 </style>

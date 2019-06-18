@@ -52,7 +52,10 @@ export default class Loader {
   };
 
   loaderCompleteHandler() {
-    if(this._callback !== undefined) this._callback();
+    if(this._callback !== undefined){
+      this._callback();
+      this._callback = undefined;
+    } 
     this._dispatcher.dispatchEvent(new Event(Event.COMPLETE));
   };
 
