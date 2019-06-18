@@ -1,6 +1,6 @@
 <template>
-  <div id="hello0">
-    <div id="hello1">
+  <div id="elephant0">
+    <div id="elephant1">
     </div>
   </div>
 </template>
@@ -14,8 +14,8 @@ export default {
 
   },
   mounted(){
-    let myImage0 = document.getElementById('hello0');
-    let myImage1 = document.getElementById('hello1');
+    let myImage0 = document.getElementById('elephant0');
+    let myImage1 = document.getElementById('elephant1');
     
     let spriteSheetPlayer = new SpriteSheetPlayer();
     spriteSheetPlayer.dispatcher.addEventListener(Event.INIT, ()=>{

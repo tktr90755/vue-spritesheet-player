@@ -62,6 +62,9 @@ export default class EventDispatcher {
   };
 
   addEventListener(type, listener) {
+    if(type === undefined){
+      throw new Error("Event Class is not found.");
+    }
     if (!this.listeners.hasOwnProperty(type)) {
       this.listeners[type] = [];
     }
