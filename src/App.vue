@@ -1,17 +1,17 @@
 <template>
   <div id="app">
-    <SpriteSheet name="Animal"/>
-    <SpriteSheet name="CircleToSquare"/>
+    <SpriteSheetPlayer name="Animal"/>
+    <SpriteSheetPlayer name="CircleToSquare"/>
   </div>
 </template>
 
 <script>
-import SpriteSheet from './components/SpriteSheet.vue'
+import SpriteSheetPlayer from './components/SpriteSheetPlayer.vue'
 
 export default {
   name: 'app',
   components: {
-    SpriteSheet
+    SpriteSheetPlayer
   }
 }
 </script>
