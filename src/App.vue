@@ -1,16 +1,17 @@
 <template>
   <div id="app">
-    <Elephant path="Animal"/>
+    <SpriteSheet path="Animal"/>
+    <SpriteSheet path="CircleToSquare"/>
   </div>
 </template>
 
 <script>
-import Elephant from './components/Elephant.vue'
+import SpriteSheet from './components/SpriteSheet.vue'
 
 export default {
   name: 'app',
   components: {
-    Elephant
+    SpriteSheet
   }
 }
 </script>

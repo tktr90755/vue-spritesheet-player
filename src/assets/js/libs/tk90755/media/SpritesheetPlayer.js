@@ -12,47 +12,52 @@
 //__________________________________________________________________________________
 // How to use
 /*
-let myImage0 = document.getElementById('hello0');
-let myImage1 = document.getElementById('hello1');
+let container = this.$el;
+let elephant = this.$el.children[0];
 
-let spriteSheetPlayer = new SpriteSheetPlayer();
-spriteSheetPlayer.dispatcher.addEventListener(Event.INIT, ()=>{
+let player = new SpriteSheetPlayer();
+player.dispatcher.addEventListener(Event.INIT, ()=>{
   console.log("Event.INIT")
 
-  myImage1.style.backgroundImage = 'url("/Animal.png")';
-  myImage1.style.backgroundRepeat = 'no-repeat';
+  elephant.style.backgroundImage = 'url("/' + this.path + '.png")';
+  elephant.style.backgroundRepeat = 'no-repeat';
 
   var image = new Image();
-  image.src = spriteSheetPlayer.image;//使っているスプライトシートはこれ
+  image.src = player.image;//使っているスプライトシートはこれ
   image.id = 'my-image';
   this.$el.append(image);
+  
+  //再生
+  player.play();
 
-  spriteSheetPlayer.play()
+  //TweenMaxの場合
+  // player.percent = 0;
+  // TweenMax.to(player,10.0,{ease:Expo.easeOut,percent:1});
 });
-spriteSheetPlayer.dispatcher.addEventListener(Event.START, ()=>{
+player.dispatcher.addEventListener(Event.START, ()=>{
   console.log("Event.START")
 });
-spriteSheetPlayer.dispatcher.addEventListener(Event.RENDER, ()=>{
-  let x = spriteSheetPlayer.x;
-  let y = spriteSheetPlayer.y;
-  let w = spriteSheetPlayer.width;
-  let h = spriteSheetPlayer.height;
-  let paddingTop = spriteSheetPlayer.spriteSourceSizeY;
-  let marginLeft = spriteSheetPlayer.spriteSourceSizeX;
+player.dispatcher.addEventListener(Event.RENDER, ()=>{
+  let x = player.x;
+  let y = player.y;
+  let w = player.width;
+  let h = player.height;
+  let paddingTop = player.spriteSourceSizeY;
+  let marginLeft = player.spriteSourceSizeX;
 
-  myImage1.style.width = w + "px";
-  myImage1.style.height = h + "px";
-  myImage1.style.backgroundPosition = -x + 'px ' + -y + 'px';
-  myImage0.style.paddingTop = paddingTop + 'px'; 
-  myImage1.style.marginLeft = marginLeft + 'px';
+  elephant.style.width = w + "px";
+  elephant.style.height = h + "px";
+  elephant.style.backgroundPosition = -x + 'px ' + -y + 'px';
+  container.style.paddingTop = paddingTop + 'px'; 
+  elephant.style.marginLeft = marginLeft + 'px';
 
   console.log("Event.RENDER: x:" + x + " y:" + y + " w:" + w + " h:" + h )
 });
-spriteSheetPlayer.dispatcher.addEventListener(Event.COMPLETE, ()=>{
+player.dispatcher.addEventListener(Event.COMPLETE, ()=>{
   console.log("Event.COMPLETE")
-  spriteSheetPlayer.play()
+  player.play()
 });
-spriteSheetPlayer.load('Animal.json', 'Animal.png', false)//第二引数をtrueにすると自動的にplay()する
+player.load(this.path + '.json', this.path + '.png', false)//第二引数をtrueにすると自動的にplay()する
 */
 import SpriteSheetLoader from '@/assets/js/libs/tk90755/net/SpriteSheetLoader.js'
 import Event from '@/assets/js/libs/tk90755/events/Event.js'

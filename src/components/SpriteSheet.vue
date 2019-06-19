@@ -1,6 +1,6 @@
 <template>
-  <div id="container">
-    <div id="elephant">
+  <div v-bind:class="path">
+    <div class="cont">
     </div>
   </div>
 </template>
@@ -11,13 +11,13 @@ import Event from '@/assets/js/libs/tk90755/events/Event.js'
 import {TweenMax} from "gsap";
 
 export default {
-  name: 'Elephant',
+  name: 'SpriteSheet',
   props: {
     path: String
   },
   mounted(){
-    let container = document.getElementById('container');
-    let elephant = document.getElementById('elephant');
+    let container = this.$el;
+    let elephant = this.$el.children[0];
     
     let player = new SpriteSheetPlayer();
     player.dispatcher.addEventListener(Event.INIT, ()=>{
@@ -31,10 +31,12 @@ export default {
       image.id = 'my-image';
       this.$el.append(image);
       
-      
+      //再生
       player.play();
+
+      //TweenMaxの場合
       // player.percent = 0;
-      // TweenMax.to(player,1.0,{ease:Expo.easeOut,percent:1});
+      // TweenMax.to(player,10.0,{ease:Expo.easeOut,percent:1});
     });
     player.dispatcher.addEventListener(Event.START, ()=>{
       console.log("Event.START")
