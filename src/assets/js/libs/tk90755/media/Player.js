@@ -134,6 +134,11 @@ export default class Player {
     value = Math.min(value, 1)
     this._currentFrame = value * this._totalFrames;
     this._percent = value;
+    if(value !== 1){
+      this.renderingEvent();
+    }else{
+      this.stop();
+    }
   }
 
   get speed(){

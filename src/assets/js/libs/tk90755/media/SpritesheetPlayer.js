@@ -124,7 +124,6 @@ export default class SpriteSheetPlayer extends Player {
     this.speed = 1;
 
     const json = this.json.frames;
-    const image = this.image;
 
     this._frameData = [];
     for(let i in json){
@@ -138,7 +137,8 @@ export default class SpriteSheetPlayer extends Player {
   // Event Handler
   renderHandler=()=>{
     if(this._frameData.length !== 0){
-      this._currentFrameData = this._frameData[this.currentFrame];
+      let data = this._frameData[parseInt(this.currentFrame)]
+      if(data) this._currentFrameData = data;
     }
   }
 
@@ -190,50 +190,50 @@ export default class SpriteSheetPlayer extends Player {
   }
 
   get x(){
-    return this._currentFrameData.frame.x;
+    return (this._currentFrameData)?this._currentFrameData.frame.x:0;
   }
 
   get y(){
-    return this._currentFrameData.frame.y;
+    return (this._currentFrameData)?this._currentFrameData.frame.y:0;
   }
 
   get width(){
-    return this._currentFrameData.frame.w;
+    return (this._currentFrameData)?this._currentFrameData.frame.w:0;
   }
 
   get height(){
-    return this._currentFrameData.frame.h;
+    return (this._currentFrameData)?this._currentFrameData.frame.h:0;
   }
 
   get rotated(){
-    return this._currentFrameData.rotated;
+    return (this._currentFrameData)?this._currentFrameData.rotated:0;
   }
 
   get trimmed(){
-    return this._currentFrameData.trimmed;
+    return (this._currentFrameData)?this._currentFrameData.trimmed:false;
   }
 
   get spriteSourceSizeX(){
-    return this._currentFrameData.spriteSourceSize.x;
+    return (this._currentFrameData)?this._currentFrameData.spriteSourceSize.x:0;
   }
 
   get spriteSourceSizeY(){
-    return this._currentFrameData.spriteSourceSize.y;
+    return (this._currentFrameData)?this._currentFrameData.spriteSourceSize.y:0;
   }
 
   get spriteSourceSizeWidth(){
-    return this._currentFrameData.spriteSourceSize.w;
+    return (this._currentFrameData)?this._currentFrameData.spriteSourceSize.w:0;
   }
 
   get spriteSourceSizeHeight(){
-    return this._currentFrameData.spriteSourceSize.h;
+    return (this._currentFrameData)?this._currentFrameData.spriteSourceSize.h:0;
   }
 
   get sourceSizeWidth(){
-    return this._currentFrameData.sourceSize.w;
+    return (this._currentFrameData)?this._currentFrameData.sourceSize.w:0;
   }
 
   get sourceSizeHeight(){
-    return this._currentFrameData.sourceSize.h;
+    return (this._currentFrameData)?this._currentFrameData.sourceSize.h:0;
   }
 }

@@ -1,16 +1,16 @@
 <template>
   <div id="app">
-    <Sample/>
+    <Elephant path="Animal"/>
   </div>
 </template>
 
 <script>
-import Sample from './components/Sample.vue'
+import Elephant from './components/Elephant.vue'
 
 export default {
   name: 'app',
   components: {
-    Sample
+    Elephant
   }
 }
 </script>
