@@ -1,5 +1,5 @@
 <template>
-  <div v-bind:class="path">
+  <div v-bind:class="name">
     <div class="cont">
     </div>
   </div>
@@ -11,19 +11,18 @@ import Event from '@/assets/js/libs/tk90755/events/Event.js'
 import {TweenMax} from "gsap";
 
 export default {
-  name: 'SpriteSheet',
   props: {
-    path: String
+    name: String
   },
   mounted(){
     let container = this.$el;
     let elephant = this.$el.children[0];
     
     let player = new SpriteSheetPlayer();
-    player.dispatcher.addEventListener(Event.INIT, ()=>{
+    player.addEventListener(Event.INIT, ()=>{
       console.log("Event.INIT")
 
-      elephant.style.backgroundImage = 'url("/' + this.path + '.png")';
+      elephant.style.backgroundImage = 'url("/' + this.name + '.png")';
       elephant.style.backgroundRepeat = 'no-repeat';
 
       var image = new Image();
@@ -38,10 +37,10 @@ export default {
       // player.percent = 0;
       // TweenMax.to(player,10.0,{ease:Expo.easeOut,percent:1});
     });
-    player.dispatcher.addEventListener(Event.START, ()=>{
+    player.addEventListener(Event.START, ()=>{
       console.log("Event.START")
     });
-    player.dispatcher.addEventListener(Event.RENDER, ()=>{
+    player.addEventListener(Event.RENDER, ()=>{
       let x = player.x;
       let y = player.y;
       let w = player.width;
@@ -57,11 +56,11 @@ export default {
 
       console.log("Event.RENDER: x:" + x + " y:" + y + " w:" + w + " h:" + h )
     });
-    player.dispatcher.addEventListener(Event.COMPLETE, ()=>{
+    player.addEventListener(Event.COMPLETE, ()=>{
       console.log("Event.COMPLETE")
       player.play()
     });
-    player.load(this.path + '.json', this.path + '.png', false)//第二引数をtrueにすると自動的にplay()する
+    player.load(this.name + '.json', this.name + '.png', false)//第二引数をtrueにすると自動的にplay()する
   }
 }
 </script>

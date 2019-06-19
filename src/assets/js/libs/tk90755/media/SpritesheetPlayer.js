@@ -72,29 +72,26 @@ export default class SpriteSheetPlayer extends Player {
     this._point = null;
     this._frameData = [];
     this._currentFrameData = null;
-    this.dispatcher.addEventListener(Event.RENDER, this.renderHandler);
   }
 
   //__________________________________________________________________________________
   // methods
   load(jsonPath, imagePath, autoPlay){
-    let callback=()=>{
+    this.addEventListener(Event.RENDER, this.renderHandler);
+    this._jsonPath = jsonPath;
+    this._imagePath = imagePath;
+    this._loader = new SpriteSheetLoader();
+    this._loader.callback =()=>{
       this.createSpriteSheet();
       this.renderInitEvent();
       if(autoPlay !== false) this.play();
-    }
-    this._jsonPath = jsonPath;
-    this._imagePath = imagePath;
-    this._loader = new SpriteSheetLoader(callback);
+    };
     this._loader.load(jsonPath, imagePath);
   }
 
   kill(){
-    this.dispatcher.removeEventListener(Event.RENDER, this.renderHandler);
-
-    this.stop()
+    this.removeEventListener(Event.RENDER, this.renderHandler);
     super.kill()
-
     this._loader = null;
     this._spriteSheet = null;
     this._path = null;
@@ -104,6 +101,7 @@ export default class SpriteSheetPlayer extends Player {
   }
 
   play(){
+    this.addEventListener(Event.RENDER, this.renderHandler);
     super.play()
   }
 
@@ -186,11 +184,6 @@ export default class SpriteSheetPlayer extends Player {
   }
 
   get currentFrameData(){
-    // console.log(this._currentFrameData.frame)
-    // console.log(this._currentFrameData.rotated)
-    // console.log(this._currentFrameData.trimmed)
-    // console.log(this._currentFrameData.spriteSourceSize)
-    // console.log(this._currentFrameData.sourceSize)
     return this._currentFrameData;
   }
 

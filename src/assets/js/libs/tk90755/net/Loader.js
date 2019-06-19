@@ -14,17 +14,18 @@
  */
 import Event from '@/assets/js/libs/tk90755/events/Event.js'
 import EventDispatcher from '@/assets/js/libs/tk90755/events/EventDispatcher.js'
-export default class Loader {
+export default class Loader extends EventDispatcher {
 
-  constructor(callback) {
+  constructor() {
+    super();
     this._request;
     this._total = NaN;
     this._loaded = NaN;
     this._percent = NaN;
     this._request;
     this._content;
-    this._dispatcher = new EventDispatcher(this);
-    this._callback = callback;
+    this._callback = null;
+    this.currentTarget = this;
   }
 
   //__________________________________________________________________________________
@@ -44,27 +45,27 @@ export default class Loader {
   //__________________________________________________________________________________
   // Event Handler
   loaderInitHandler() {
-    this._dispatcher.dispatchEvent(new Event(Event.INIT));
+    super.dispatchEvent(new Event(Event.INIT));
   };
 
   loaderProgressHandler() {
-    this._dispatcher.dispatchEvent(new Event(Event.RENDER));
+    super.dispatchEvent(new Event(Event.RENDER));
   };
 
   loaderCompleteHandler() {
-    if(this._callback !== undefined){
+    if(this._callback !== undefined || this._callback !== null){
       this._callback();
       this._callback = undefined;
     } 
-    this._dispatcher.dispatchEvent(new Event(Event.COMPLETE));
+    super.dispatchEvent(new Event(Event.COMPLETE));
   };
 
   loadIOErrorHandler() {
-    this._dispatcher.dispatchEvent(new Event(Event.IO_ERROR));
+    super.dispatchEvent(new Event(Event.IO_ERROR));
   };
 
   loadSecurityHandler() {
-    this._dispatcher.dispatchEvent(new Event(Event.SECURITY_ERROR));
+    super.dispatchEvent(new Event(Event.SECURITY_ERROR));
   };
 
   //__________________________________________________________________________________
@@ -89,11 +90,14 @@ export default class Loader {
     return this._content;
   }
 
-  get dispatcher(){
-    return _dispatcher;
-  }
-
   get callback(){
-    return _callback;
+    return this._callback;
+  }
+  set callback(value){
+    if(String(typeof(value)) === 'function'){
+      this._callback = value;
+    }else{
+      console.log(value + ' is not function');
+    }
   }
 }

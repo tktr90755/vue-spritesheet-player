@@ -15,7 +15,8 @@
 var Event = tktr90755.events.Event;
 var EventDispatcher = tktr90755.events.EventDispatcher;
 
-var dispatcher = new EventDispatcher(window);
+var dispatcher = new EventDispatcher();
+dispatcher.currentTarget = window;
 dispatcher.name="dispatcher";
 
 dispatcher.addEventListener('say1', function (event) {
@@ -40,12 +41,10 @@ test.dispatcher.deferEventDispatch(new Event('say2', window), 4000);
 */
 
 export default class EventDispatcher {
-  constructor(currentTarget, eventTarget) {
-    this.currentTarget = (currentTarget) ? currentTarget : null;
+  constructor() {
     this.queuedEvents = {};
     this.deferedEvents = [];
     this.listeners = {};
-    this.target = (eventTarget) ? eventTarget : null;
   }
 
   dispatchQueuedEvents(type) {
@@ -99,7 +98,7 @@ export default class EventDispatcher {
   };
 
   dispatchEvent(event) {
-    event.currentTarget = this.currentTarget;
+    event.currentTarget = this._currentTarget;
     if (this.listeners.hasOwnProperty(event.type)) {
       let lItr;
       let lCount;
@@ -154,4 +153,11 @@ export default class EventDispatcher {
       }
     }
   };
+
+  get currentTarget(){
+    return this._currentTarget;
+  }
+  set currentTarget(value){
+    this._currentTarget = (value) ? value : null;
+  }
 }

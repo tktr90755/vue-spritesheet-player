@@ -38,8 +38,8 @@ if (!window.XMLHttpRequest){
 import Loader from '@/assets/js/libs/tk90755/net/Loader.js'
 export default class SpriteSheetLoader extends Loader {
 
-  constructor(callback) {
-    super(callback);
+  constructor() {
+    super();
     this.id = new Date().getTime().toString(16)  + Math.floor(1000 * Math.random()).toString(16);
   }
 
@@ -103,63 +103,4 @@ export default class SpriteSheetLoader extends Loader {
     };
     xhr.send(null);
   }
-  // kill(){
-
-  // }
-
-  // cancel(){
-
-  // }
-  //__________________________________________________________________________________
-  // Event Handler
-  // loaderInitHandler() {
-  //   this._dispatcher.dispatchEvent(new Event(Event.INIT));
-  // };
-
-  // loaderProgressHandler() {
-  //   this._dispatcher.dispatchEvent(new Event(Event.RENDER));
-  // };
-
-  // loaderCompleteHandler() {
-  //   if(this._callback !== null || this._callback !== undefined) _callback();
-  //   this._dispatcher.dispatchEvent(new Event(Event.COMPLETE));
-  // };
-
-  // loadIOErrorHandler() {
-  //   this._dispatcher.dispatchEvent(new Event(Event.IO_ERROR));
-  // };
-
-  // loadSecurityHandler() {
-  //   this._dispatcher.dispatchEvent(new Event(Event.SECURITY_ERROR));
-  // };
-
-  //__________________________________________________________________________________
-  // getter
-  // get request(){
-  //   return this._request;
-  // }
-
-  // get total(){
-  //   return this._total;
-  // }
-
-  // get loaded(){
-  //   return this._loaded;
-  // }
-
-  // get percent(){
-  //   return this._percent;
-  // }
-
-  // get content(){
-  //   return this._content;
-  // }
-
-  // get dispatcher(){
-  //   return _dispatcher;
-  // }
-
-  // get callback(){
-  //   return _callback;
-  // }
 }
