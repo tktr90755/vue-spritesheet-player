@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <SpriteSheetPlayer name="Animal"/>
-    <SpriteSheetPlayer name="CircleToSquare"/>
+    <SpriteSheetPlayer jsonPath="./Animal.json" imagePath="./Animal.png"/>
+    <SpriteSheetPlayer jsonPath="./CircleToSquare.json" imagePath="./CircleToSquare.png"/>
   </div>
 </template>
 

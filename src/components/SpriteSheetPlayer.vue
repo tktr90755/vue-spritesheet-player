@@ -1,5 +1,5 @@
 <template>
-  <div v-bind:class="name">
+  <div>
     <div class="cont">
     </div>
   </div>
@@ -12,18 +12,19 @@ import {TweenMax} from "gsap";
 
 export default {
   props: {
-    name: String
+    jsonPath: String,
+    imagePath: String
   },
   mounted(){
     let container = this.$el;
-    let elephant = this.$el.children[0];
+    let child = this.$el.children[0];
     
     let player = new SpriteSheetPlayer();
     player.addEventListener(Event.INIT, ()=>{
       console.log("Event.INIT")
 
-      elephant.style.backgroundImage = 'url("/' + this.name + '.png")';
-      elephant.style.backgroundRepeat = 'no-repeat';
+      child.style.backgroundImage = 'url("' + this.imagePath + '")';
+      child.style.backgroundRepeat = 'no-repeat';
 
       var image = new Image();
       image.src = player.image;//使っているスプライトシートはこれ
@@ -48,11 +49,11 @@ export default {
       let paddingTop = player.spriteSourceSizeY;
       let marginLeft = player.spriteSourceSizeX;
 
-      elephant.style.width = w + "px";
-      elephant.style.height = h + "px";
-      elephant.style.backgroundPosition = -x + 'px ' + -y + 'px';
+      child.style.width = w + "px";
+      child.style.height = h + "px";
+      child.style.backgroundPosition = -x + 'px ' + -y + 'px';
       container.style.paddingTop = paddingTop + 'px'; 
-      elephant.style.marginLeft = marginLeft + 'px';
+      child.style.marginLeft = marginLeft + 'px';
 
       console.log("Event.RENDER: x:" + x + " y:" + y + " w:" + w + " h:" + h )
     });
@@ -60,7 +61,7 @@ export default {
       console.log("Event.COMPLETE")
       player.play()
     });
-    player.load(this.name + '.json', this.name + '.png', false)//第二引数をtrueにすると自動的にplay()する
+    player.load(this.jsonPath, this.imagePath, false)//第二引数をtrueにすると自動的にplay()する
   }
 }
 </script>
